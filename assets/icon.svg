@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="88" fill="#ff8a00"/>
+  <path d="M108 298 256 132l148 166h-78l-70-80-70 80z" fill="#10bfb4"/>
+  <path d="M128 342h256v54H128z" fill="#fff"/>
+  <text x="256" y="458" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="76" font-weight="800" fill="#fff">NYSA</text>
+</svg>

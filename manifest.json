@@ -1,0 +1,16 @@
+{
+  "name": "NYSA Παραγγελιοληψία",
+  "short_name": "NYSA Orders",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f1f3f5",
+  "theme_color": "#ff8a00",
+  "icons": [
+    {
+      "src": "./assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

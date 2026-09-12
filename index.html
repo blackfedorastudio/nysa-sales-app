@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="el">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#ff8a00" />
+    <title>NYSA Παραγγελιοληψία</title>
+    <link rel="manifest" href="./manifest.json" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <section class="login-screen" id="loginScreen">
+      <div class="login-card">
+        <img class="login-logo" src="./assets/nysa-logo.jpeg" alt="NYSA" />
+        <p class="eyebrow">Παραγγελιοληψία χονδρικής</p>
+        <h1>Είσοδος χρήστη</h1>
+        <form id="loginForm" class="login-form">
+          <label>
+            <span>Χρήστης</span>
+            <input id="usernameInput" autocomplete="username" placeholder="maria, kostas ή admin" />
+          </label>
+          <label>
+            <span>Κωδικός</span>
+            <input id="passwordInput" type="password" autocomplete="current-password" placeholder="1234" />
+          </label>
+          <button class="primary-btn full" type="submit">Σύνδεση</button>
+          <div class="notice login-error" id="loginError" hidden>Λάθος χρήστης ή κωδικός.</div>
+        </form>
+      </div>
+    </section>
+
+    <div class="app-shell" id="appShell" hidden>
+      <aside class="sidebar" aria-label="Navigation">
+        <div class="brand">
+          <img class="brand-logo" src="./assets/nysa-logo.jpeg" alt="NYSA" />
+          <div>
+            <strong>NYSA</strong>
+            <span>Παραγγελιοληψία</span>
+          </div>
+        </div>
+
+        <div class="user-card">
+          <span class="eyebrow" id="roleLabel">Πωλητής</span>
+          <strong id="sellerName">NYSA User</strong>
+          <small><span id="assignedCount">6</span> πελάτες</small>
+          <button class="logout-btn" id="logoutBtn">Αποσύνδεση</button>
+        </div>
+
+        <nav class="nav-list">
+          <button class="nav-item active" data-view="dashboard">Αρχική</button>
+          <button class="nav-item" data-view="catalog">Κατάλογος</button>
+          <button class="nav-item" data-view="codeOrder">Κωδικοί</button>
+          <button class="nav-item" data-view="aiOrder">Agent</button>
+          <button class="nav-item" data-view="admin">Έλεγχος</button>
+        </nav>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Χονδρική παραγγελιοληψία</p>
+            <h1 id="viewTitle">Αρχική</h1>
+          </div>
+          <div class="top-actions">
+            <button class="ghost-btn" id="installBtn" hidden>Εγκατάσταση</button>
+            <button class="cart-pill" data-view-jump="cart">
+              <span>Καλάθι</span>
+              <strong id="cartCount">0</strong>
+            </button>
+          </div>
+        </header>
+
+        <section class="view active" id="dashboard">
+          <div class="hero-panel">
+            <div>
+              <p class="eyebrow">Σήμερα</p>
+              <h2>Παραγγελίες πωλητών με άμεσο έλεγχο και καθαρή εικόνα.</h2>
+              <p>Ο πωλητής επιλέγει πελάτη, περνάει προϊόντα με κατάλογο, κωδικούς ή φωνή, και η παραγγελία φτάνει οργανωμένη στο κέντρο ελέγχου.</p>
+            </div>
+            <div class="hero-stats">
+              <button class="stat-card live-stat" type="button">
+                <strong id="productCount">0</strong>
+                <span>προϊόντα καταλόγου</span>
+              </button>
+              <button class="stat-card" id="pendingStatBtn" type="button">
+                <strong id="pendingCount">0</strong>
+                <span>εκκρεμείς παραγγελίες</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="action-grid">
+            <button class="action-card" data-view-jump="catalog">
+              <span>01</span>
+              <strong>Χειροκίνητη Παραγγελία</strong>
+              <small>Κατηγορίες, εικόνες, αναζήτηση και ποσότητες.</small>
+            </button>
+            <button class="action-card" data-view-jump="codeOrder">
+              <span>02</span>
+              <strong>Παραγγελία με Κωδικό</strong>
+              <small>Πέρασε κωδικούς και ποσότητες σε δευτερόλεπτα.</small>
+            </button>
+            <button class="action-card" data-view-jump="aiOrder">
+              <span>03</span>
+              <strong>Φωνητική Καταχώρηση</strong>
+              <small>Υπαγόρευση παραγγελίας και μετατροπή σε καλάθι.</small>
+            </button>
+          </div>
+
+          <div class="split-grid">
+            <section class="panel">
+              <div class="panel-head">
+                <h3>Πελάτες πωλητή</h3>
+                <span id="customerCount">6</span>
+              </div>
+              <div class="customer-list" id="customerList"></div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head">
+                <h3>Τελευταίες Παραγγελίες</h3>
+                <span id="recentOrderCount">0</span>
+              </div>
+              <div class="order-list" id="recentOrders"></div>
+            </section>
+
+            <section class="panel customer-profile-panel">
+              <div class="panel-head">
+                <h3>Προφίλ Πελάτη</h3>
+                <span id="profileBadge">ενεργός</span>
+              </div>
+              <div id="customerProfile" class="customer-profile"></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="catalog">
+          <div class="selected-customer-bar">
+            <div>
+              <span class="eyebrow">Ενεργός πελάτης</span>
+              <strong id="activeCustomerName">Hotel Aegean</strong>
+              <small id="activeCustomerMeta">Ξενοδοχείο / Καβάλα</small>
+            </div>
+            <button class="ghost-btn" data-view-jump="dashboard">Αλλαγή πελάτη</button>
+          </div>
+          <div class="toolbar">
+            <label class="search-box">
+              <span>Αναζήτηση</span>
+              <input id="productSearch" type="search" placeholder="SKU, όνομα, κατηγορία..." />
+            </label>
+            <label>
+              <span>Κατηγορία</span>
+              <select id="categoryFilter"></select>
+            </label>
+            <label>
+              <span>Πελάτης</span>
+              <select id="customerSelect"></select>
+            </label>
+          </div>
+          <div class="catalog-meta">
+            <span id="catalogResultCount">0 προϊόντα</span>
+            <button class="ghost-btn" id="loadMoreBtn">Περισσότερα</button>
+          </div>
+          <div class="product-grid" id="productGrid"></div>
+        </section>
+
+        <section class="view" id="codeOrder">
+          <div class="panel wide">
+            <div class="panel-head">
+              <h3>Παραγγελία με Κωδικό</h3>
+              <span>καταχώρηση κωδικών</span>
+            </div>
+            <textarea id="skuInput" rows="8" spellcheck="false">466591 x 2
+398717 x 1
+008364 x 5</textarea>
+            <div class="button-row">
+              <button class="primary-btn" id="parseSkuBtn">Προσθήκη στο καλάθι</button>
+              <button class="ghost-btn" id="clearSkuBtn">Καθαρισμός</button>
+            </div>
+            <div class="notice" id="skuNotice">Γράψε ένα προϊόν ανά γραμμή: κωδικός x ποσότητα.</div>
+          </div>
+        </section>
+
+        <section class="view" id="aiOrder">
+          <div class="panel wide">
+            <div class="panel-head">
+              <h3>Agent Παραγγελίας</h3>
+              <span>σημείωση σε πρόχειρη</span>
+            </div>
+            <textarea id="aiInput" rows="7">Για το Hotel Aegean βάλε 2 από 466591, 1 από 398717 και 5 από 008364 με 10% έκπτωση. Σημείωση παράδοση Παρασκευή.</textarea>
+            <div class="button-row">
+              <button class="primary-btn" id="parseAiBtn">Δημιουργία πρόχειρης</button>
+              <button class="ghost-btn voice-btn" id="voiceBtn">Υπαγόρευση beta</button>
+            </div>
+            <div class="voice-status" id="voiceStatus">Γράψε ή υπαγόρευσε τη σημείωση. Η φωνή είναι βοηθητική λειτουργία beta, το τελικό βήμα είναι ο έλεγχος κειμένου και η δημιουργία πρόχειρης.</div>
+            <div class="ai-preview" id="aiPreview"></div>
+          </div>
+        </section>
+
+        <section class="view" id="cart">
+          <div class="cart-layout">
+            <section class="panel">
+              <div class="panel-head">
+                <h3>Καλάθι Παραγγελίας</h3>
+                <button class="ghost-btn danger" id="clearCartBtn">Άδειασμα</button>
+              </div>
+              <div id="cartItems" class="cart-items"></div>
+            </section>
+            <section class="panel">
+              <h3>Υποβολή</h3>
+              <label>
+                <span>Πελάτης</span>
+                <select id="cartCustomerSelect"></select>
+              </label>
+              <label>
+                <span>Γενική έκπτωση παραγγελίας %</span>
+                <input id="discountInput" type="number" min="0" max="80" value="0" />
+              </label>
+              <label>
+                <span>Σημείωση προς έλεγχο</span>
+                <textarea id="orderNote" rows="4" placeholder="π.χ. Παράδοση Παρασκευή"></textarea>
+              </label>
+              <div class="summary-box">
+                <span>Σύνολο τεμαχίων</span>
+                <strong id="cartUnits">0</strong>
+              </div>
+              <button class="primary-btn full" id="submitOrderBtn">Αποστολή για έλεγχο</button>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" id="admin">
+          <div class="control-grid">
+            <section class="panel control-hero">
+              <div>
+                <p class="eyebrow">Κέντρο Ελέγχου</p>
+                <h2>Παραγγελίες, πωλητές και εγκρίσεις σε μία οθόνη.</h2>
+              </div>
+              <div class="control-stats">
+                <div><strong id="controlPending">0</strong><span>προς έλεγχο</span></div>
+                <div><strong id="controlSellers">0</strong><span>πωλητές</span></div>
+                <div><strong id="controlToday">0</strong><span>σημερινές</span></div>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head">
+                <h3>Παραγγελίες για έλεγχο</h3>
+                <span id="adminOrderCount">0 παραγγελίες</span>
+              </div>
+              <div class="admin-list" id="adminOrders"></div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head">
+                <h3>Πωλητές</h3>
+                <span id="sellerCount">0</span>
+              </div>
+              <div class="seller-list" id="sellerList"></div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-head">
+                <h3>Νέος πωλητής</h3>
+                <span>λογαριασμός</span>
+              </div>
+              <form class="seller-form" id="sellerForm">
+                <label>
+                  <span>Ονοματεπώνυμο</span>
+                  <input id="newSellerName" placeholder="π.χ. Νίκος Παπαδόπουλος" />
+                </label>
+                <label>
+                  <span>Username</span>
+                  <input id="newSellerUsername" placeholder="π.χ. nikos" />
+                </label>
+                <label>
+                  <span>Κωδικός</span>
+                  <input id="newSellerPassword" placeholder="π.χ. 1234" />
+                </label>
+                <label>
+                  <span>Περιοχή</span>
+                  <input id="newSellerArea" placeholder="π.χ. Δράμα" />
+                </label>
+                <label>
+                  <span>Όριο έκπτωσης χωρίς έγκριση %</span>
+                  <input id="newSellerLimit" type="number" min="0" max="80" value="10" />
+                </label>
+                <button class="primary-btn full" type="submit">Δημιουργία πωλητή</button>
+              </form>
+            </section>
+
+            <section class="panel wide">
+              <div class="panel-head">
+                <h3>Ανάθεση πελατών</h3>
+                <span>ανά πωλητή</span>
+              </div>
+              <div class="assignment-grid" id="assignmentGrid"></div>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="modal-backdrop" id="pendingModal" hidden>
+      <section class="edit-modal">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Εκκρεμότητες</p>
+            <h3>Παραγγελίες που χρειάζονται ενέργεια</h3>
+          </div>
+          <button class="icon-btn" type="button" id="pendingClose" aria-label="Κλείσιμο">×</button>
+        </div>
+        <div class="pending-list" id="pendingList"></div>
+      </section>
+    </div>
+
+    <div class="modal-backdrop" id="previewModal" hidden>
+      <section class="edit-modal preview-modal">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Προεπισκόπηση</p>
+            <h3>Παραγγελία προς τιμολόγηση</h3>
+          </div>
+          <button class="icon-btn" type="button" id="previewClose" aria-label="Κλείσιμο">×</button>
+        </div>
+        <div id="orderPreview"></div>
+        <div class="button-row modal-actions">
+          <button class="primary-btn" type="button" id="printPreviewBtn">Εκτύπωση / PDF</button>
+          <button class="ghost-btn" type="button" id="exportExcelBtn">Export Excel</button>
+          <button class="ghost-btn" type="button" id="exportCsvBtn">Export CSV</button>
+        </div>
+      </section>
+    </div>
+
+    <div class="modal-backdrop" id="editModal" hidden>
+      <form class="edit-modal" id="editForm">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow" id="editEyebrow">Επεξεργασία</p>
+            <h3 id="editTitle">Στοιχεία</h3>
+          </div>
+          <button class="icon-btn" type="button" id="editClose" aria-label="Κλείσιμο">×</button>
+        </div>
+        <input id="editMode" type="hidden" />
+        <input id="editId" type="hidden" />
+        <label>
+          <span id="editLabelOne">Πεδίο 1</span>
+          <input id="editFieldOne" />
+        </label>
+        <label>
+          <span id="editLabelTwo">Πεδίο 2</span>
+          <input id="editFieldTwo" />
+        </label>
+        <label>
+          <span id="editLabelThree">Πεδίο 3</span>
+          <input id="editFieldThree" />
+        </label>
+        <label>
+          <span id="editLabelFour">Σημείωση</span>
+          <textarea id="editFieldFour" rows="4"></textarea>
+        </label>
+        <div class="button-row modal-actions">
+          <button class="primary-btn" type="submit">Αποθήκευση</button>
+          <button class="ghost-btn" type="button" id="editCancel">Άκυρο</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="toast" id="toast"></div>
+    <script src="./app.js" type="module"></script>
+  </body>
+</html>
